@@ -1,17 +1,13 @@
-# YT-DLP Multi-Profile Download System  
+# YT-DLP Multi-Profile Download System
 Portable, self-contained setup for fast and structured media downloading on Windows.
 
-This folder contains a complete yt-dlp environment with a custom dispatcher script that allows you to run commands such as:
+This project contains a clean, modular environment for yt-dlp with:
+- a dispatcher (`dlp.cmd` + `dlp.ps1`)
+- a single profiles file (`yt-dlp-profiles.conf`)
+- simple install steps for yt-dlp and FFmpeg
+- a predictable folder structure
 
-```
-dlp yt-podcasts <url>
-dlp yt-video <url>
-dlp sc-playlist <url>
-dlp yt-album <url>
-dlp list
-```
-
-Everything is modular, portable, and easy to maintain.
+Everything is portable and easy to move to any future system.
 
 ---
 
@@ -19,91 +15,98 @@ Everything is modular, portable, and easy to maintain.
 
 ```
 yt-dlp/
-  yt-dlp.exe
-  ffmpeg.exe
-  ffprobe.exe
-  ffplay.exe
   dlp.cmd
   dlp.ps1
   yt-dlp-profiles.conf
   README.md
+  (yt-dlp.exe)        # downloaded manually
+  (ffmpeg.exe)
+  (ffprobe.exe)
+  (ffplay.exe)
 ```
 
-Downloaded media is stored in:
+Downloaded media is stored outside the repo:
 
 ```
 C:/Users/admin/data-hoarding-media/audio/
 C:/Users/admin/data-hoarding-media/video/
 ```
 
+This ensures the GitHub repo stays clean and lightweight.
+
 ---
 
 # Full Setup Instructions
 
-Follow these steps when installing on a new machine or rebuilding the environment.
-
 ## 1. Create base folder
+
+Choose where you want your setup to live:
 
 ```
 C:/Users/admin/data-hoarding-media/code/yt-dlp
 ```
 
----
+Clone your GitHub repository into this folder:
 
-## 2. Download yt-dlp (automated)
-
-### Using CMD:
-
-```
-curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe -o yt-dlp.exe
+```cmd
+git clone https://github.com/<your-username>/yt-dlp-multiprofile-setup.git C:\Users\admin\data-hoarding-media\code\yt-dlp
 ```
 
-### Using PowerShell:
+Then:
 
+```cmd
+cd C:\Users\admin\data-hoarding-media\code\yt-dlp
 ```
-Invoke-WebRequest -Uri "https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe" -OutFile "yt-dlp.exe"
-```
-
-Place the file inside the yt-dlp folder.
 
 ---
 
-## 3. Download FFmpeg tools (automated)
+## 2. Install yt-dlp
 
-FFmpeg Windows builds are available at gyan.dev.
+Download the latest Windows binary from the official project:
 
-### Using CMD:
+https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe
 
-```
-curl -L https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip -o ffmpeg.zip
-tar -xf ffmpeg.zip
-```
+Place `yt-dlp.exe` directly into your yt-dlp folder.
 
-From the extracted folder, copy:
+---
 
-- ffmpeg.exe  
-- ffprobe.exe  
-- ffplay.exe  
+## 3. Install FFmpeg (Windows)
 
-into the yt-dlp folder.
+Download the latest “Essentials” build here:
+
+https://www.gyan.dev/ffmpeg/builds/
+
+Extract and copy these files into the yt-dlp folder:
+
+- ffmpeg.exe
+- ffprobe.exe
+- ffplay.exe
+
+These will sit next to the scripts and be used automatically.
 
 ---
 
 ## 4. Add folder to User PATH
 
-Add this entry to your User PATH:
+Add this folder to your **User** PATH:
 
 ```
 C:/Users/admin/data-hoarding-media/code/yt-dlp
 ```
 
-This enables the commands `dlp` and `yt-dlp` globally.
+This makes the command:
+
+```
+dlp
+```
+
+available everywhere in your terminal.
 
 ---
 
 ## 5. Required Windows System PATH entries
 
-These must exist in the System PATH. They are default Windows directories:
+These must already exist in your **System** PATH:
 
 ```
 %SystemRoot%/system32
@@ -113,55 +116,111 @@ These must exist in the System PATH. They are default Windows directories:
 %SystemRoot%/System32/OpenSSH/
 ```
 
-These entries contain built‑in system tools such as:
+These paths contain built‑in Windows tools (`powershell.exe`, `where.exe`, etc).  
+If they are missing, Windows behaves unpredictably.
 
-- powershell.exe  
-- where.exe  
-- ping.exe  
-- ssh.exe  
-- wmic.exe  
-
-If they are missing from PATH, Windows built‑in commands may break. Restoring them ensures normal OS behavior.
+This setup **does not modify** these paths.  
+You should simply confirm they exist.
 
 ---
 
-## 6. Add dispatcher scripts
+# Dispatcher Scripts
 
-### dlp.cmd
+## dlp.cmd
 
-```
+```bat
 @echo off
 powershell -ExecutionPolicy Bypass -File "%~dp0dlp.ps1" %*
 ```
 
-### dlp.ps1  
-This script reads profiles from `yt-dlp-profiles.conf`, splits arguments properly, and passes everything to yt-dlp.
-
-Both files must be placed in the yt-dlp folder.
+This ensures `dlp` works in normal CMD environments.
 
 ---
 
-## 7. Add your profiles
+## dlp.ps1 (dispatcher)
 
-Edit:
+- Loads the profiles from `yt-dlp-profiles.conf`
+- Resolves the selected profile
+- Builds the argument list for yt-dlp
+- Allows:
+  - `dlp <profile> <url>`
+  - `dlp list`
+  - `dlp --list-profiles`
+
+This is the core of the system.
+
+---
+
+# Profiles
+
+All presets live in:
 
 ```
 yt-dlp-profiles.conf
 ```
 
-Example preset:
+Each section:
 
 ```
-[yt-podcasts]
+[name]
+--option
+--option value
+```
+
+Example:
+
+```
+[yt-video]
+--embed-metadata
+--merge-output-format mp4
+-o "C:/Users/admin/data-hoarding-media/video/youtube/%(uploader)s/%(title)s.%(ext)s"
+```
+
+---
+
+# Final YouTube Music Album Profile
+
+This version:
+- preserves full contributing-artist metadata
+- creates **one** main artist folder (no feature splits)
+- ensures track numbers are embedded
+- keeps filenames clean (no track numbers, no features)
+
+```
+[yt-album]
 -x
---audio-format best
+--audio-format m4a
 --embed-metadata
 --embed-thumbnail
--o "C:/Users/admin/data-hoarding-media/audio/podcasts/%(uploader)s/%(title)s.%(ext)s"
+--sleep-interval 2
+--max-sleep-interval 5
+--concurrent-fragments 1
+
+# Ensure track_number exists: use playlist_index if needed
+--parse-metadata "%(playlist_index,track_number|)s:%(track_number)s"
+
+# Derive clean main artist for folder naming only
+--parse-metadata "artist:(?P<meta_main_artist>[^,&]+).*"
+
+# Output path: MainArtist / Album / Title
+-o "C:/Users/admin/data-hoarding-media/audio/albums/%(meta_main_artist,artist)s/%(album)s/%(title)s.%(ext)s"
 ```
 
-Each section defines a profile.  
-Each line is a yt-dlp argument.
+Resulting structure example:
+
+```
+.../audio/albums/Lapalux/Lustmore/
+  Closure.m4a
+  U Never Know.m4a
+  ...
+```
+
+Tags include:
+- Full contributing artists
+- Track number
+- Album name
+- Thumbnail
+- Metadata
 
 ---
 
@@ -173,7 +232,7 @@ Each line is a yt-dlp argument.
 dlp
 ```
 
-or:
+Or:
 
 ```
 dlp list
@@ -189,170 +248,103 @@ dlp sc-playlist <url>
 dlp yt-album <url>
 ```
 
-The dispatcher automatically:
-
-- selects the correct preset  
-- splits arguments correctly  
-- passes everything to yt-dlp  
-- outputs files to the correct folder  
-
----
-
-# How the System Works
-
-## 1. yt-dlp-profiles.conf  
-All presets in one file.  
-Each block:
-
-```
-[name]
-arg1
-arg2
-arg3 value
-```
-
-This replaces multiple .conf and .bat files.
-
----
-
-## 2. dlp.ps1  
-Core logic:
-
-- reads and parses all profiles  
-- validates profile name  
-- displays profile list when asked  
-- correctly splits each argument  
-- executes yt-dlp with the chosen profile  
-
----
-
-## 3. dlp.cmd  
-Entry point to make the system work from any CMD or terminal pane.
-
----
-
-# Adding a New Profile
-
-Add:
-
-```
-[yt-shortform]
---embed-metadata
---merge-output-format mp4
--o "C:/Users/admin/data-hoarding-media/video/shortform/%(uploader)s/%(title)s.%(ext)s"
-```
-
-Run it:
-
-```
-dlp yt-shortform <url>
-```
-
-Nothing else needs modification.
-
 ---
 
 # Troubleshooting
 
-### Unknown profile  
-Check:
-
-```
-[name]
-```
-
-with no spaces or stray characters.
-
-### yt-dlp error: no such option  
-Every option must be written on one line:
-
-Correct:
-
-```
---option value
-```
-
-Incorrect:
-
-```
---option
-value
-```
-
-### dlp not found  
-User PATH missing:
+### dlp not recognized
+PATH is missing:
 
 ```
 C:/Users/admin/data-hoarding-media/code/yt-dlp
 ```
 
-### powershell not recognized  
+### powershell not recognized
 System PATH missing:
 
 ```
 %SystemRoot%/system32
 ```
 
+### Unknown profile
+Your header is malformed:
+
+```
+[yt-video]
+```
+
+### Missing track numbers
+Ensure you are using the final `[yt-album]` preset in this README.
+
 ---
 
 # Security Notes
 
-This setup is safe because:
+This setup:
+- adds only one user-controlled folder to PATH  
+- does not add any system folders  
+- keeps all Windows system PATH entries default  
+- uses official downloads for yt-dlp and FFmpeg  
+- avoids committing binaries into GitHub  
 
-- Only one user-controlled folder is added to PATH  
-- All restored system PATH entries are official Windows directories  
-- No network paths or world-writable locations were added  
-- yt-dlp and FFmpeg are portable standalone executables  
+This keeps the environment safe and maintainable.
 
 ---
 
 # Maintenance
 
-## Updating yt-dlp  
-Two options:
+## Update yt-dlp
 
-### Replace manually:
-Download the newest yt-dlp.exe and overwrite the old file.
+Replace `yt-dlp.exe` manually, **or** run:
 
-### Or use built-in updater:
 ```
 yt-dlp -U
 ```
 
----
+## Update FFmpeg
 
-## Updating FFmpeg  
-Download a new build, extract, and replace:
+Download a newer build and replace:
 
 - ffmpeg.exe  
 - ffprobe.exe  
 - ffplay.exe  
 
----
+## Update profiles
 
-## Updating profiles  
 Edit:
 
 ```
 yt-dlp-profiles.conf
 ```
 
-No other file requires changes.
+No other files need changes.
 
 ---
 
-## Backing up  
-The entire folder is self-contained.  
-Copying it preserves all functionality.
+# Quick Install on a New Machine
+
+1. Clone the repo:
+
+```cmd
+git clone https://github.com/<your-username>/yt-dlp-multiprofile-setup.git C:\Users\admin\data-hoarding-media\code\yt-dlp
+```
+
+2. Download:
+   - yt-dlp.exe (from GitHub)
+   - FFmpeg essentials (from gyan.dev)
+
+3. Place the binaries into the same folder.
+
+4. Add the folder to your User PATH.
+
+5. Run:
+
+```cmd
+dlp list
+```
+
+You’re ready to go.
 
 ---
 
-# Result  
-A clean, scalable, predictable multi-profile yt-dlp environment:
-
-- one dispatcher  
-- one config file  
-- one command  
-- organized audio/video output  
-- easy updates  
-- portable  
+This setup is portable, clean, and future‑proof.
