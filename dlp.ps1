@@ -62,7 +62,7 @@ $configLines = @()
 $configLines += "--ffmpeg-location `"$(To-FwdSlash $scriptDir)`""
 
 # --- SMART HUMAN-READABLE ARCHIVE LOGIC ---
-$perLinkProfiles = @("yt-playlist", "sc-playlist", "yt-album", "av-set", "yt-podcasts", "yt-channel-audio")
+$perLinkProfiles = @("yt-playlist", "sc-playlist", "yt-album", "av-set", "yt-podcasts", "yt-channel-audio", "yt-channel-video")
 
 if ($Profile -in $perLinkProfiles) {
     Write-Host "Resolving metadata for archive naming..." -ForegroundColor Gray

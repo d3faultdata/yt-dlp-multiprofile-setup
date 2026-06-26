@@ -134,6 +134,7 @@ overrides options on top.
 | `yt-podcasts`      | Podcast feed -> `podcasts/Show/Title.m4a`             |
 | `sc-playlist`      | SoundCloud likes/playlist (reversed order)            |
 | `yt-channel-audio` | Whole channel as audio, with side-car descriptions    |
+| `yt-channel-video` | Whole channel as video, SponsorBlock removed, with side-car descriptions |
 | `yt-video`         | Video, SponsorBlock removed, `.description` kept       |
 | `yt-clip`          | Video, only sponsor/self-promo removed                |
 | `yt-tv`            | TV show -> `Series/Season N/SxxExx - Title.mkv`       |
