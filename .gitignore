@@ -1,20 +1,50 @@
-# Binaries
+# =========================================================
+# Binaries and runtime tools (downloaded separately, never committed)
+# =========================================================
 *.exe
 *.dll
 *.zip
+*.pyd
+_internal/
+yt_dlp_plugins/
 
-# Media
+# =========================================================
+# yt-dlp runtime state (download history, etc.)
+# =========================================================
+yt_dlp_archives/
+
+# =========================================================
+# Secrets: never commit cookies or auth data
+# =========================================================
+cookies.txt
+*.cookies
+*cookies*.txt
+
+# =========================================================
+# Media files
+# =========================================================
 *.m4a
 *.mp3
 *.flac
 *.wav
 *.aac
 *.ogg
+*.opus
 *.mp4
 *.mkv
 *.webm
 *.webp
+*.jpg
+*.jpeg
+*.png
 
-# Temporary folders
-ffmpeg-unpacked/
+# =========================================================
+# Old / backup snapshots and temp folders
+# =========================================================
+_old/
+old/
+txt/
 tmp/
+ffmpeg-unpacked/
+*_backup.*
+*_old.*

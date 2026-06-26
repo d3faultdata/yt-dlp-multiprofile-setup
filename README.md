@@ -1,350 +1,177 @@
 # YT-DLP Multi-Profile Download System
-Portable, self-contained setup for fast and structured media downloading on Windows.
 
-This project contains a clean, modular environment for yt-dlp with:
-- a dispatcher (`dlp.cmd` + `dlp.ps1`)
-- a single profiles file (`yt-dlp-profiles.conf`)
-- simple install steps for yt-dlp and FFmpeg
-- a predictable folder structure
+A portable, self-contained yt-dlp setup for Windows that turns long download
+commands into short, named profiles. One config file holds every preset; a thin
+PowerShell dispatcher wires it to yt-dlp and FFmpeg.
 
-Everything is portable and easy to move to any future system.
+```
+dlp yt-album "https://music.youtube.com/playlist?list=..."
+dlp yt-video "https://youtube.com/watch?v=..."
+```
 
 ---
 
-# Folder Structure
+## Repository contents
+
+Only the scripts and config live in git. Binaries and runtime tooling are
+downloaded separately and stay ignored, so the repo stays small.
 
 ```
 yt-dlp/
-  dlp.cmd
-  dlp.ps1
-  yt-dlp-profiles.conf
+  dlp.cmd                 # CMD entry point -> calls dlp.ps1
+  dlp.ps1                 # dispatcher: parses profiles, builds the yt-dlp command
+  yt-dlp-profiles.conf    # all download presets, one section per profile
   README.md
-  (yt-dlp.exe)        # downloaded manually
-  (ffmpeg.exe)
-  (ffprobe.exe)
-  (ffplay.exe)
+  .gitignore
+
+  # not committed (see .gitignore), but required locally:
+  yt-dlp.exe              # the yt-dlp onedir build...
+  _internal/              # ...and its runtime dependencies (keep together)
+  ffmpeg.exe
+  ffprobe.exe
+  AtomicParsley.exe       # used for some thumbnail/metadata embedding
+  fpcalc.exe              # Chromaprint, for beets audio fingerprinting (optional)
+  yt_dlp_plugins/         # optional yt-dlp plugins (e.g. bgutil POT provider)
+  yt_dlp_archives/        # download-history files written at runtime
 ```
 
-Downloaded media is stored outside the repo:
+Downloaded media is stored completely outside the repo, e.g.:
 
 ```
-C:/Users/admin/data-hoarding-media/audio/
-C:/Users/admin/data-hoarding-media/video/
-```
-
-This ensures the GitHub repo stays clean and lightweight.
-
----
-
-# Full Setup Instructions
-
-## 1. Create base folder
-
-Choose where you want your setup to live:
-
-```
-C:/Users/admin/data-hoarding-media/code/yt-dlp
-```
-
-Clone your GitHub repository into this folder:
-
-```cmd
-git clone https://github.com/<your-username>/yt-dlp-multiprofile-setup.git C:\Users\admin\data-hoarding-media\code\yt-dlp
-```
-
-Then:
-
-```cmd
-cd C:\Users\admin\data-hoarding-media\code\yt-dlp
+D:/data-hoarding-media/audio/
+D:/data-hoarding-media/video/
 ```
 
 ---
 
-## 2. Install yt-dlp
+## Setup on a new machine
 
-Download the latest Windows binary from the official project:
+1. **Clone** this repo somewhere, e.g. `D:\code\yt-dlp`.
 
-https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp.exe
+2. **yt-dlp**: download the Windows build and place `yt-dlp.exe` (and its
+   `_internal/` folder, if using the onedir zip) into the repo folder.
+   - https://github.com/yt-dlp/yt-dlp/releases/latest
 
-Place `yt-dlp.exe` directly into your yt-dlp folder.
+3. **FFmpeg**: download an "essentials" or "full" Windows build and copy
+   `ffmpeg.exe` and `ffprobe.exe` into the repo folder.
+   - https://www.gyan.dev/ffmpeg/builds/
 
----
+4. **PATH**: add the repo folder to your **User** PATH so `dlp` works from any
+   terminal. The dispatcher points yt-dlp at the local `ffmpeg.exe` automatically
+   via `--ffmpeg-location`, so FFmpeg does not need to be on PATH.
 
-## 3. Install FFmpeg (Windows)
-
-Download the latest “Essentials” build here:
-
-https://www.gyan.dev/ffmpeg/builds/
-
-Extract and copy these files into the yt-dlp folder:
-
-- ffmpeg.exe
-- ffprobe.exe
-- ffplay.exe
-
-These will sit next to the scripts and be used automatically.
+5. (Optional) `AtomicParsley.exe`, `fpcalc.exe`, and `yt_dlp_plugins/` only matter
+   if you use those features.
 
 ---
 
-## 4. Add folder to User PATH
-
-Add this folder to your **User** PATH:
+## Usage
 
 ```
-C:/Users/admin/data-hoarding-media/code/yt-dlp
+dlp <profile> "<url>"
 ```
 
-This makes the command:
+Always quote the URL -- YouTube URLs contain `&`, which the shell otherwise
+treats as a command separator.
 
 ```
-dlp
+dlp yt-album    "https://music.youtube.com/playlist?list=OLAK5uy_..."
+dlp yt-playlist "https://youtube.com/playlist?list=..."
+dlp yt-single   "https://music.youtube.com/watch?v=..."
+dlp yt-video    "https://youtube.com/watch?v=..."
+dlp yt-podcasts "https://youtube.com/playlist?list=..."
 ```
 
-available everywhere in your terminal.
-
----
-
-## 5. Required Windows System PATH entries
-
-These must already exist in your **System** PATH:
+### Pass-through (no profile)
 
 ```
-%SystemRoot%/system32
-%SystemRoot%
-%SystemRoot%/System32/Wbem
-%SystemRoot%/System32/WindowsPowerShell/v1.0/
-%SystemRoot%/System32/OpenSSH/
+dlp direct "<url>" <any yt-dlp args>
 ```
 
-These paths contain built‑in Windows tools (`powershell.exe`, `where.exe`, etc).  
-If they are missing, Windows behaves unpredictably.
+`direct` skips all profiles and forwards everything straight to `yt-dlp.exe`.
 
-This setup **does not modify** these paths.  
-You should simply confirm they exist.
+### Override a profile option
 
----
-
-# Dispatcher Scripts
-
-## dlp.cmd
-
-```bat
-@echo off
-powershell -ExecutionPolicy Bypass -File "%~dp0dlp.ps1" %*
-```
-
-This ensures `dlp` works in normal CMD environments.
-
----
-
-## dlp.ps1 (dispatcher)
-
-- Loads the profiles from `yt-dlp-profiles.conf`
-- Resolves the selected profile
-- Builds the argument list for yt-dlp
-- Allows:
-  - `dlp <profile> <url>`
-  - `dlp list`
-  - `dlp --list-profiles`
-
-This is the core of the system.
-
----
-
-# Profiles
-
-All presets live in:
+Extra arguments after the URL are appended last and win over the profile, e.g.
+to force a one-off output path:
 
 ```
-yt-dlp-profiles.conf
-```
-
-Each section:
-
-```
-[name]
---option
---option value
-```
-
-Example:
-
-```
-[yt-video]
---embed-metadata
---merge-output-format mp4
--o "C:/Users/admin/data-hoarding-media/video/youtube/%(uploader)s/%(title)s.%(ext)s"
+dlp yt-album "<url>" -o "D:/somewhere/%(playlist_index)02d - %(title)s.%(ext)s"
 ```
 
 ---
 
-# Final YouTube Music Album Profile
+## How the dispatcher works
 
-This version:
-- preserves full contributing-artist metadata
-- creates **one** main artist folder (no feature splits)
-- ensures track numbers are embedded
-- keeps filenames clean (no track numbers, no features)
+`dlp.ps1`:
 
-```
-[yt-album]
--x
---audio-format m4a
---embed-metadata
---embed-thumbnail
---sleep-interval 2
---max-sleep-interval 5
---concurrent-fragments 1
-
-# Ensure track_number exists: use playlist_index if needed
---parse-metadata "%(playlist_index,track_number|)s:%(track_number)s"
-
-# Derive clean main artist for folder naming only
---parse-metadata "artist:(?P<meta_main_artist>[^,&]+).*"
-
-# Output path: MainArtist / Album / Title
--o "C:/Users/admin/data-hoarding-media/audio/albums/%(meta_main_artist,artist)s/%(album)s/%(title)s.%(ext)s"
-```
-
-Resulting structure example:
-
-```
-.../audio/albums/Lapalux/Lustmore/
-  Closure.m4a
-  U Never Know.m4a
-  ...
-```
-
-Tags include:
-- Full contributing artists
-- Track number
-- Album name
-- Thumbnail
-- Metadata
+1. Reads `yt-dlp-profiles.conf` and merges the `[default]` section with the
+   chosen profile.
+2. Writes the resolved options to a temporary yt-dlp **config file** and runs
+   yt-dlp with `--config-location`. (This is deliberate: passing options as a
+   PowerShell array drops empty-string arguments like the `""` in
+   `--replace-in-metadata`, which corrupts metadata and folder names. A real
+   config file parses quoting and empty strings correctly.)
+3. Picks a **download-archive** file so re-runs skip what you already have:
+   - playlist/album/channel profiles get a per-download archive named after the
+     playlist, under `yt_dlp_archives/`.
+   - everything else shares `yt_dlp_archives/yt_dlp_global_history.txt`.
 
 ---
 
-# Usage
+## Profiles
 
-### List all profiles
+All presets live in `yt-dlp-profiles.conf`. The `[default]` section applies to
+every download (impersonation, anti-ban sleeps, retries, metadata embedding,
+the "- Topic" channel cleaner, and the release-year fix). Each profile adds or
+overrides options on top.
 
-```
-dlp
-```
+| Profile            | Purpose                                               |
+|--------------------|-------------------------------------------------------|
+| `yt-album`         | Music album -> `albums/Artist/Album/Title.m4a`        |
+| `yt-playlist`      | General playlist -> `playlists/yt-playlists/...`      |
+| `yt-single`        | One track -> `singles/Artist - Title.m4a`             |
+| `yt-podcasts`      | Podcast feed -> `podcasts/Show/Title.m4a`             |
+| `sc-playlist`      | SoundCloud likes/playlist (reversed order)            |
+| `yt-channel-audio` | Whole channel as audio, with side-car descriptions    |
+| `yt-video`         | Video, SponsorBlock removed, `.description` kept       |
+| `yt-clip`          | Video, only sponsor/self-promo removed                |
+| `yt-tv`            | TV show -> `Series/Season N/SxxExx - Title.mkv`       |
+| `yt-movie`         | Movie -> `movies/Title/Title.mkv`                     |
+| `av-set`           | Indexed 1080p set (e.g. numbered playlist)            |
 
-Or:
+### About the `yt-album` profile
 
-```
-dlp list
-dlp --list-profiles
-```
+For YouTube Music album playlists, featured/remix tracks are uploaded on the
+guest artist's "- Topic" channel, so a per-track folder template would scatter
+one album across several artist folders. The dispatcher solves this by resolving
+**one** album artist for the whole playlist and pinning every track into that
+single `Artist/Album/` folder.
 
-### Download using a profile
-
-```
-dlp yt-podcasts <url>
-dlp yt-video <url>
-dlp sc-playlist <url>
-dlp yt-album <url>
-```
-
----
-
-# Troubleshooting
-
-### dlp not recognized
-PATH is missing:
-
-```
-C:/Users/admin/data-hoarding-media/code/yt-dlp
-```
-
-### powershell not recognized
-System PATH missing:
-
-```
-%SystemRoot%/system32
-```
-
-### Unknown profile
-Your header is malformed:
-
-```
-[yt-video]
-```
-
-### Missing track numbers
-Ensure you are using the final `[yt-album]` preset in this README.
+Filenames are kept clean (`Title.m4a`, no track number -- the track number lives
+in the file's metadata). One known edge case: some deluxe/mixtape albums contain
+genuinely distinct songs that share a title (e.g. two different "Space Cadet"),
+and YouTube exposes no field that tells them apart. Those collide onto one
+filename. When that happens, download that album once with a temporary
+`%(playlist_index)02d - %(title)s` output (see "Override a profile option"),
+then rename the files using an external tracklist.
 
 ---
 
-# Security Notes
+## Maintenance
 
-This setup:
-- adds only one user-controlled folder to PATH  
-- does not add any system folders  
-- keeps all Windows system PATH entries default  
-- uses official downloads for yt-dlp and FFmpeg  
-- avoids committing binaries into GitHub  
-
-This keeps the environment safe and maintainable.
+- **Update yt-dlp:** run `yt-dlp -U`, or replace `yt-dlp.exe` (and `_internal/`).
+- **Update FFmpeg:** replace `ffmpeg.exe` and `ffprobe.exe`.
+- **Edit presets:** change `yt-dlp-profiles.conf`. No other file needs changing
+  for a normal profile tweak; only `dlp.ps1` knows about the `yt-album` artist
+  pinning.
 
 ---
 
-# Maintenance
+## Notes
 
-## Update yt-dlp
-
-Replace `yt-dlp.exe` manually, **or** run:
-
-```
-yt-dlp -U
-```
-
-## Update FFmpeg
-
-Download a newer build and replace:
-
-- ffmpeg.exe  
-- ffprobe.exe  
-- ffplay.exe  
-
-## Update profiles
-
-Edit:
-
-```
-yt-dlp-profiles.conf
-```
-
-No other files need changes.
-
----
-
-# Quick Install on a New Machine
-
-1. Clone the repo:
-
-```cmd
-git clone https://github.com/<your-username>/yt-dlp-multiprofile-setup.git C:\Users\admin\data-hoarding-media\code\yt-dlp
-```
-
-2. Download:
-   - yt-dlp.exe (from GitHub)
-   - FFmpeg essentials (from gyan.dev)
-
-3. Place the binaries into the same folder.
-
-4. Add the folder to your User PATH.
-
-5. Run:
-
-```cmd
-dlp list
-```
-
-You’re ready to go.
-
----
-
-This setup is portable, clean, and future‑proof.
+- Binaries, media, runtime archives, and `cookies.txt` are git-ignored. Do not
+  commit cookies or any auth data.
+- The setup adds only one user-controlled folder to PATH and does not touch
+  system PATH entries.
+- Tested on Windows 11 with PowerShell 5.1.
