@@ -255,3 +255,9 @@ channel/playlist downloads in parallel.
   dispatcher picks the right one automatically.
 - Tested on Windows 11 (PowerShell/CMD) and Pop!_OS (Linux). The previous
   Windows-only PowerShell version is preserved under the `v1.0-powershell` tag.
+
+---
+
+## License
+
+MIT - see [LICENSE](LICENSE).
