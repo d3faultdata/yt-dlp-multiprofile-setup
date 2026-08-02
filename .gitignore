@@ -8,6 +8,19 @@
 _internal/
 yt_dlp_plugins/
 
+# Linux/macOS binaries (extensionless). Anchored to the repo root so they do
+# not shadow the committed "dlp" launcher script or dlp.py.
+/yt-dlp
+/ffmpeg
+/ffprobe
+/AtomicParsley
+/fpcalc
+
+# =========================================================
+# Local per-machine settings (holds your personal media path)
+# =========================================================
+dlp.local.conf
+
 # =========================================================
 # yt-dlp runtime state (download history, etc.)
 # =========================================================

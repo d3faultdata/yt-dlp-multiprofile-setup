@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Linux/macOS launcher: run the Python dispatcher that sits next to this script.
+# On Windows, dlp.cmd is used instead.
+here="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
+exec python3 "$here/dlp.py" "$@"

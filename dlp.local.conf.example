@@ -1,0 +1,17 @@
+# dlp local settings - copy this file to "dlp.local.conf" and edit.
+#
+# This is the ONLY per-machine setting. It sets the master directory that all
+# downloads go under. The folder tree beneath it (audio/albums, video/channels,
+# ...) is created automatically and is identical on every OS - only this root
+# changes between machines.
+#
+# dlp.local.conf is git-ignored so your personal path never gets committed.
+#
+# Examples:
+#   Windows:  media_root = D:/data-hoarding-media
+#   Linux:    media_root = /home/you/data-hoarding-media
+#
+# If this file is absent, dlp falls back to the DLP_MEDIA_ROOT environment
+# variable, and then to a per-OS default.
+
+media_root = D:/data-hoarding-media

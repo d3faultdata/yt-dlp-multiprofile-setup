@@ -1,2 +1,7 @@
 @echo off
-powershell -ExecutionPolicy Bypass -File "%~dp0dlp.ps1" %*
+where py >nul 2>nul
+if %errorlevel%==0 (
+    py -3 "%~dp0dlp.py" %*
+) else (
+    python "%~dp0dlp.py" %*
+)
