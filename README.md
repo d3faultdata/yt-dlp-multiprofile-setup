@@ -63,9 +63,14 @@ so the folder can be copied to another machine or a backup and still work.
 1. **Clone** this repo somewhere, e.g. `D:\code\yt-dlp` (Windows) or
    `~/code/yt-dlp` (Linux).
 
-2. **yt-dlp**: download the build for your OS and place the binary in the repo
-   folder (`yt-dlp.exe` on Windows, `yt-dlp` on Linux).
-   - https://github.com/yt-dlp/yt-dlp/releases/latest
+2. **yt-dlp**: from https://github.com/yt-dlp/yt-dlp/releases/latest, download the
+   **standalone** build for your OS and put it in the repo folder. Use the
+   standalone build specifically - it bundles `curl_cffi`, which the default
+   `--impersonate chrome` option needs (the plain `yt-dlp` zipapp does not).
+   - Windows: `yt-dlp.exe`
+   - Linux (x86_64): download `yt-dlp_linux` and rename it to `yt-dlp`
+     (the dispatcher looks for a file named `yt-dlp`). ARM: `yt-dlp_linux_aarch64`.
+   - The one requirement either way is Python 3 for the dispatcher itself.
 
 3. **FFmpeg**: you only need `ffmpeg` and `ffprobe` (`.exe` on Windows) sitting
    in the repo folder. The **release essentials** build is enough - it has all
