@@ -204,7 +204,10 @@ def main():
         url_hash = (base64.b64encode(url.encode("utf-8")).decode("ascii")
                     .replace("/", "_").replace("+", "-").replace("=", ""))
         short_hash = url_hash[:6] if len(url_hash) > 6 else url_hash
-        archive_file = ARCHIVE_DIR / f"archive_{clean_title}_{short_hash}.txt"
+        # Include the profile so audio/video variants of the SAME source (e.g.
+        # yt-channel-audio and yt-channel-video on one channel) get separate
+        # archives and don't mark each other's downloads as already done.
+        archive_file = ARCHIVE_DIR / f"archive_{profile}_{clean_title}_{short_hash}.txt"
     else:
         archive_file = ARCHIVE_DIR / "yt_dlp_global_history.txt"
 
