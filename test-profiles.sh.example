@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# test-profiles.sh - smoke-test every profile with one download each (Linux/macOS).
+#
+# Setup:
+#   1. Copy this file to "test-profiles.sh"
+#   2. Replace each XXXX with a real URL of the matching type (and your own
+#      SoundCloud likes URL for sc-likes).
+#   3. Run from inside the repo folder:
+#        bash test-profiles.sh
+#
+# Your filled-in "test-profiles.sh" is git-ignored, so personal URLs stay local.
+# Multi-item profiles (playlists / albums / channels) are limited to 1 file each.
+
+declare -A URLS=(
+  # --- audio ---
+  [yt-playlist-audio]="https://www.youtube.com/playlist?list=XXXX"
+  [yt-album]="https://music.youtube.com/playlist?list=OLAK5uy_XXXX"
+  [yt-single]="https://music.youtube.com/watch?v=XXXX"
+  [yt-podcasts]="https://www.youtube.com/watch?v=XXXX"
+  [sc-likes]="https://soundcloud.com/YOURUSER/likes"
+  [yt-channel-audio]="https://www.youtube.com/@SomeChannel"
+  # --- video ---
+  [yt-video]="https://www.youtube.com/watch?v=XXXX"
+  [yt-playlist-video]="https://www.youtube.com/playlist?list=XXXX"
+  [yt-channel-video]="https://www.youtube.com/@SomeChannel"
+)
+
+# Explicit order (bash associative arrays are unordered) + which profiles to cap.
+ORDER="yt-playlist-audio yt-album yt-single yt-podcasts sc-likes yt-channel-audio yt-video yt-playlist-video yt-channel-video"
+MULTI=" yt-playlist-audio yt-playlist-video yt-album yt-podcasts sc-likes yt-channel-audio yt-channel-video "
+
+passed=""; failed=""
+for p in $ORDER; do
+  extra=""
+  case "$MULTI" in *" $p "*) extra="--playlist-items 1";; esac
+  echo "==================== $p ===================="
+  if ./dlp "$p" "${URLS[$p]}" $extra; then passed="$passed $p"; else failed="$failed $p"; fi
+done
+echo "========================================"
+echo "PASSED:$passed"
+echo "FAILED:$failed"

@@ -21,6 +21,11 @@ yt_dlp_plugins/
 # =========================================================
 dlp.local.conf
 
+# Filled-in test scripts (your personal test URLs). Keep only the .example
+# templates in git.
+test-profiles.ps1
+test-profiles.sh
+
 # =========================================================
 # yt-dlp runtime state (download history, etc.)
 # =========================================================

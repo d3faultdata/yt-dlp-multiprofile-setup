@@ -168,6 +168,19 @@ dlp yt-single "https://music.youtube.com/watch?v=SOME_SHORT_TRACK"
 Check that the file landed under your `media_root` in the expected folder. If it
 did, you are set.
 
+### Test every profile at once
+
+To smoke-test all profiles in one go, copy the template for your OS, fill in one
+real URL per profile, and run it. Each multi-item profile is capped at 1 file.
+
+- Windows: copy `test-profiles.ps1.example` to `test-profiles.ps1`, then
+  `powershell -ExecutionPolicy Bypass -File test-profiles.ps1`
+- Linux/macOS: copy `test-profiles.sh.example` to `test-profiles.sh`, then
+  `bash test-profiles.sh`
+
+It prints a `PASSED` / `FAILED` summary at the end. Your filled-in copies are
+git-ignored, so your personal test URLs stay local.
+
 ---
 
 ## Usage
