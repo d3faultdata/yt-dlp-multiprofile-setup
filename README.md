@@ -77,10 +77,12 @@ so the folder can be copied to another machine or a backup and still work.
      right-click; the smaller `.7z` needs 7-zip). Inside the extracted folder,
      the executables are in the **`bin\`** subfolder - copy `ffmpeg.exe` and
      `ffprobe.exe` into the repo folder. You do not need `ffplay.exe`.
-   - **Linux**: install from your package manager (`sudo apt install ffmpeg` on
-     Pop!_OS/Ubuntu), or grab a static build from
-     https://johnvansickle.com/ffmpeg/ and copy `ffmpeg` and `ffprobe` from the
-     extracted archive into the repo folder.
+   - **Linux**: easiest is your package manager (`sudo apt install ffmpeg` on
+     Pop!_OS/Ubuntu) - it installs `ffmpeg` and `ffprobe` on your PATH and the
+     dispatcher picks them up automatically, so nothing needs to go in the repo
+     folder. For a self-contained folder instead, grab a static build from the
+     official download page (https://ffmpeg.org/download.html) and copy `ffmpeg`
+     and `ffprobe` from the archive into the repo folder.
 
 4. **Make `dlp` runnable from anywhere** (optional but convenient):
    - Windows: add the repo folder to your **User** PATH so `dlp` works in any
