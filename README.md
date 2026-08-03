@@ -67,12 +67,20 @@ so the folder can be copied to another machine or a backup and still work.
    folder (`yt-dlp.exe` on Windows, `yt-dlp` on Linux).
    - https://github.com/yt-dlp/yt-dlp/releases/latest
 
-3. **FFmpeg**: download a static build for your OS and copy `ffmpeg` and
-   `ffprobe` (`.exe` on Windows) into the repo folder. If FFmpeg is already
-   installed and on your PATH, you can skip this - the dispatcher falls back to
-   the system FFmpeg when no local one is present.
-   - Windows: https://www.gyan.dev/ffmpeg/builds/
-   - Linux: your package manager, or https://johnvansickle.com/ffmpeg/
+3. **FFmpeg**: you only need `ffmpeg` and `ffprobe` (`.exe` on Windows) sitting
+   in the repo folder. The **release essentials** build is enough - it has all
+   the codecs yt-dlp uses; you do not need the "full" or "git master" builds.
+   If FFmpeg is already installed and on your PATH, you can skip this entirely -
+   the dispatcher falls back to the system FFmpeg when no local one is present.
+   - **Windows** (https://www.gyan.dev/ffmpeg/builds/): under "release builds",
+     download `ffmpeg-release-essentials.zip` (the `.zip` extracts with a plain
+     right-click; the smaller `.7z` needs 7-zip). Inside the extracted folder,
+     the executables are in the **`bin\`** subfolder - copy `ffmpeg.exe` and
+     `ffprobe.exe` into the repo folder. You do not need `ffplay.exe`.
+   - **Linux**: install from your package manager (`sudo apt install ffmpeg` on
+     Pop!_OS/Ubuntu), or grab a static build from
+     https://johnvansickle.com/ffmpeg/ and copy `ffmpeg` and `ffprobe` from the
+     extracted archive into the repo folder.
 
 4. **Make `dlp` runnable from anywhere** (optional but convenient):
    - Windows: add the repo folder to your **User** PATH so `dlp` works in any
