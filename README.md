@@ -52,6 +52,14 @@ directory you choose (see "Setting the media directory").
     https://www.python.org/downloads/ (keep the "py launcher" option checked).
 - **yt-dlp** and **FFmpeg** binaries for your OS (see Setup). Both are standalone
   downloads - no system installation needed; they just sit in the repo folder.
+- **(Recommended) a JavaScript runtime for YouTube.** Recent yt-dlp solves
+  YouTube's JS challenges with a runtime (deno). Without one you may see
+  `WARNING: No supported JavaScript runtime could be found` and some formats
+  may be missing. This is a yt-dlp/YouTube requirement, not an OS one - but in
+  practice the standalone Windows build ships with a runtime, while the Linux
+  build does not, so it mainly affects Linux. If you see that warning, install
+  deno (`curl -fsSL https://deno.land/install.sh | sh`, or see the yt-dlp EJS
+  wiki linked in the warning). Optional today, increasingly recommended.
 
 The dispatcher, the binaries, and your one settings file are all self-contained,
 so the folder can be copied to another machine or a backup and still work.
