@@ -68,8 +68,12 @@ so the folder can be copied to another machine or a backup and still work.
    standalone build specifically - it bundles `curl_cffi`, which the default
    `--impersonate chrome` option needs (the plain `yt-dlp` zipapp does not).
    - Windows: `yt-dlp.exe`
-   - Linux (x86_64): download `yt-dlp_linux` and rename it to `yt-dlp`
-     (the dispatcher looks for a file named `yt-dlp`). ARM: `yt-dlp_linux_aarch64`.
+   - Linux (x86_64): download `yt-dlp_linux` and save it as `yt-dlp` (the
+     dispatcher looks for that name). ARM: use `yt-dlp_linux_aarch64` instead.
+     ```
+     wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux -O yt-dlp
+     chmod +x yt-dlp
+     ```
    - The one requirement either way is Python 3 for the dispatcher itself.
 
 3. **FFmpeg**: you only need `ffmpeg` and `ffprobe` (`.exe` on Windows) sitting
@@ -85,12 +89,16 @@ so the folder can be copied to another machine or a backup and still work.
    - **Linux**: easiest is your package manager (`sudo apt install ffmpeg` on
      Pop!_OS/Ubuntu) - it installs `ffmpeg` and `ffprobe` on your PATH and the
      dispatcher picks them up automatically, so nothing needs to go in the repo
-     folder. For a self-contained folder instead, grab a static build and copy
-     `ffmpeg` and `ffprobe` from its `bin/` folder into the repo folder. On
-     x86_64, that's `ffmpeg-master-latest-linux64-gpl.tar.xz` from
-     https://github.com/BtbN/FFmpeg-Builds/releases (use the `linuxarm64` build
-     for ARM; the official list of providers is at
-     https://ffmpeg.org/download.html).
+     folder. For a self-contained folder instead, download a static build and
+     copy `ffmpeg` and `ffprobe` out of its `bin/` folder. On x86_64 (use the
+     `linuxarm64` build for ARM; provider list at https://ffmpeg.org/download.html):
+     ```
+     wget https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz
+     tar xf ffmpeg-master-latest-linux64-gpl.tar.xz
+     cp ffmpeg-master-latest-linux64-gpl/bin/ffmpeg ffmpeg-master-latest-linux64-gpl/bin/ffprobe .
+     chmod +x ffmpeg ffprobe
+     rm -rf ffmpeg-master-latest-linux64-gpl ffmpeg-master-latest-linux64-gpl.tar.xz
+     ```
 
 4. **Make `dlp` runnable from anywhere** (optional but convenient):
    - Windows: add the repo folder to your **User** PATH so `dlp` works in any
