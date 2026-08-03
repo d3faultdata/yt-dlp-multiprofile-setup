@@ -178,11 +178,11 @@ Always quote the URL - YouTube URLs contain `&`, which the shell otherwise
 treats as a command separator.
 
 ```
-dlp yt-album    "https://music.youtube.com/playlist?list=OLAK5uy_..."
-dlp yt-playlist "https://youtube.com/playlist?list=..."
-dlp yt-single   "https://music.youtube.com/watch?v=..."
-dlp yt-video    "https://youtube.com/watch?v=..."
-dlp yt-podcasts "https://youtube.com/playlist?list=..."
+dlp yt-album          "https://music.youtube.com/playlist?list=OLAK5uy_..."
+dlp yt-playlist-audio "https://youtube.com/playlist?list=..."
+dlp yt-single         "https://music.youtube.com/watch?v=..."
+dlp yt-video          "https://youtube.com/watch?v=..."
+dlp yt-podcasts       "https://youtube.com/playlist?list=..."
 ```
 
 `dlp list` (or `dlp` with no arguments) prints all available profile names.
@@ -244,9 +244,9 @@ your master media directory and are just the default layout.
 
 | Profile            | Purpose                                               |
 |--------------------|-------------------------------------------------------|
-| `yt-album`         | Music album -> `audio/albums/Artist/Album/Title.m4a`  |
-| `yt-playlist`      | General playlist -> `audio/playlists/yt-playlists/...`|
-| `yt-single`        | One track -> `audio/singles/Artist - Title.m4a`       |
+| `yt-album`          | Music album -> `audio/albums/Artist/Album/Title.m4a` |
+| `yt-playlist-audio` | Playlist as audio -> `audio/playlists/PlaylistName/...` |
+| `yt-single`         | One track -> `audio/singles/Artist - Title.m4a`      |
 | `yt-podcasts`      | Podcast feed -> `audio/podcasts/Show/Title.m4a`       |
 | `sc-likes`         | Your SoundCloud Likes feed -> `audio/soundcloud/likes/` (reversed order) |
 | `yt-channel-audio` | Whole channel as audio, with side-car descriptions    |
@@ -255,8 +255,9 @@ your master media directory and are just the default layout.
 
 | Profile            | Purpose                                               |
 |--------------------|-------------------------------------------------------|
-| `yt-video`         | Video -> `video/youTube/Channel/Date - Title.mkv`, cuts ads/self-promo, `.description` kept |
-| `yt-channel-video` | Whole channel as video, SponsorBlock removed, with side-car descriptions |
+| `yt-video`          | Video -> `video/youTube/Channel/Date - Title.mkv`, cuts ads/self-promo, `.description` kept |
+| `yt-playlist-video` | Playlist as video -> `video/playlists/PlaylistName/...`, cuts ads/self-promo |
+| `yt-channel-video`  | Whole channel as video, SponsorBlock removed, with side-car descriptions |
 
 ### Customizing profiles
 
