@@ -103,11 +103,13 @@ Set it once, in order of precedence:
 
 1. **`dlp.local.conf`** (recommended). Copy the template and edit one line:
    ```
-   cp dlp.local.conf.example dlp.local.conf
+   copy dlp.local.conf.example dlp.local.conf     :: Windows (CMD)
+   cp dlp.local.conf.example dlp.local.conf       #  Linux / macOS
    ```
+   Then set the one line (forward slashes work on both OSes):
    ```
-   media_root = /home/you/data-hoarding-media      # Linux
    media_root = D:/data-hoarding-media             # Windows
+   media_root = /home/you/data-hoarding-media      # Linux
    ```
    This file is git-ignored, so your personal path is never committed.
 
