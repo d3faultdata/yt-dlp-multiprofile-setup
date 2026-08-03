@@ -240,6 +240,8 @@ metadata embedding, the "- Topic" channel cleaner, and the release-year fix).
 Each profile adds or overrides options on top. Paths shown below are relative to
 your master media directory and are just the default layout.
 
+**Audio**
+
 | Profile            | Purpose                                               |
 |--------------------|-------------------------------------------------------|
 | `yt-album`         | Music album -> `audio/albums/Artist/Album/Title.m4a`  |
@@ -248,10 +250,15 @@ your master media directory and are just the default layout.
 | `yt-podcasts`      | Podcast feed -> `audio/podcasts/Show/Title.m4a`       |
 | `sc-playlist`      | SoundCloud likes/playlist (reversed order)            |
 | `yt-channel-audio` | Whole channel as audio, with side-car descriptions    |
-| `yt-channel-video` | Whole channel as video, SponsorBlock removed, with side-car descriptions |
+
+**Video**
+
+| Profile            | Purpose                                               |
+|--------------------|-------------------------------------------------------|
 | `yt-video`         | Video -> `video/youTube/Channel/Date - Title.mkv`, cuts ads/self-promo, `.description` kept |
 | `yt-tv`            | TV show -> `video/tv-shows/Series/Season N/SxxExx - Title.mkv` |
 | `yt-movie`         | Movie -> `video/movies/Title/Title.mkv`               |
+| `yt-channel-video` | Whole channel as video, SponsorBlock removed, with side-car descriptions |
 
 ### Customizing profiles
 
