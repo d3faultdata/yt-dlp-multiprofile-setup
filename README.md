@@ -104,15 +104,18 @@ below and uses the first one it finds, so pick whichever suits you - you do not
 need more than one.
 
 1. **`dlp.local.conf` file** (recommended). A one-line file next to the scripts.
-   Copy the template:
+   Copy the template - on Windows (CMD):
    ```
-   copy dlp.local.conf.example dlp.local.conf     :: Windows (CMD)
-   cp dlp.local.conf.example dlp.local.conf       #  Linux / macOS
+   copy dlp.local.conf.example dlp.local.conf
    ```
-   Then edit the one line (forward slashes work on both OSes):
+   On Linux / macOS:
    ```
-   media_root = D:/data-hoarding-media             # Windows
-   media_root = /home/you/data-hoarding-media      # Linux
+   cp dlp.local.conf.example dlp.local.conf
+   ```
+   Then open `dlp.local.conf` and set the one line to your path (forward slashes
+   work on both OSes; inside this file, `#` starts a comment):
+   ```
+   media_root = D:/data-hoarding-media
    ```
    Best choice for most people: it is git-ignored (your personal path is never
    committed) and it travels with the folder to backups and other machines.
@@ -132,11 +135,20 @@ need more than one.
 
 ## Verify your setup
 
-From the repo folder, list the profiles:
+From the repo folder, list the profiles - on Windows (CMD):
 
 ```
-dlp list           (Windows: .\dlp.cmd list)
+.\dlp.cmd list
 ```
+
+On Linux / macOS:
+
+```
+./dlp list
+```
+
+(Once the folder is on your PATH - see Setup step 4 - you can just type
+`dlp list` from anywhere on either OS.)
 
 If it prints the profile names (`yt-album`, `yt-video`, ...), the dispatcher is
 installed and reading its config correctly. This step only needs Python - it
@@ -144,7 +156,8 @@ does not touch the yt-dlp or ffmpeg binaries - so it is the quickest way to
 confirm the basics before a real download.
 
 Then try one small real download to confirm the binaries and your media path
-work end to end:
+work end to end (use `.\dlp.cmd` on Windows, `./dlp` on Linux, or plain `dlp`
+if it is on your PATH):
 
 ```
 dlp yt-single "https://music.youtube.com/watch?v=SOME_SHORT_TRACK"
