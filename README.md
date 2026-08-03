@@ -214,8 +214,8 @@ dlp yt-album "<url>" -o "%(playlist_index)02d - %(title)s.%(ext)s"
    chosen profile.
 2. Resolves your master media directory and passes it to yt-dlp as the base path
    (`--paths`). The profile output templates are relative, so they build the same
-   folder tree under that base on any OS. (`av-set` is the exception - it
-   downloads into the current directory.)
+   folder tree under that base on any OS. (A profile can override this by using
+   an absolute path in its own `-o`.)
 3. Detects the bundled `yt-dlp`/`ffmpeg` for the current OS, and falls back to
    whatever is on PATH if no local binary is present.
 4. Writes the resolved options to a temporary yt-dlp **config file** and runs
@@ -232,11 +232,13 @@ dlp yt-album "<url>" -o "%(playlist_index)02d - %(title)s.%(ext)s"
 
 ## Profiles
 
-All presets live in `yt-dlp-profiles.conf`. The `[default]` section applies to
-every download (impersonation, anti-ban sleeps, retries, metadata embedding,
-the "- Topic" channel cleaner, and the release-year fix). Each profile adds or
-overrides options on top. Paths shown below are relative to your master media
-directory.
+The profiles in `yt-dlp-profiles.conf` are **examples / starting points** - they
+are the ones the author uses, not a fixed set. Edit them, delete the ones you do
+not want, or add your own (see "Customizing profiles" below). The `[default]`
+section applies to every download (impersonation, anti-ban sleeps, retries,
+metadata embedding, the "- Topic" channel cleaner, and the release-year fix).
+Each profile adds or overrides options on top. Paths shown below are relative to
+your master media directory and are just the default layout.
 
 | Profile            | Purpose                                               |
 |--------------------|-------------------------------------------------------|
@@ -251,7 +253,24 @@ directory.
 | `yt-clip`          | Video, only sponsor/self-promo removed                |
 | `yt-tv`            | TV show -> `video/tv-shows/Series/Season N/SxxExx - Title.mkv` |
 | `yt-movie`         | Movie -> `video/movies/Title/Title.mkv`               |
-| `av-set`           | Indexed 1080p set into the current directory          |
+
+### Customizing profiles
+
+The whole config is yours to shape - the folder tree above is a *proposal*, not a
+requirement:
+
+- **Change where files go:** edit a profile's `-o` output template. The path is
+  relative to your master media directory, so `-o "music/%(artist)s/%(title)s.%(ext)s"`
+  reorganizes that profile however you like. (An absolute `-o` path ignores the
+  master directory entirely, if you want one profile to go somewhere specific.)
+- **Add a profile:** add a new `[my-profile]` section with whatever yt-dlp options
+  you want. It is available immediately as `dlp my-profile "<url>"`.
+- **Remove a profile:** delete its section.
+- **One code touchpoint:** if your new profile downloads a whole
+  playlist/album/channel and you want it to get its own per-source archive file
+  (so re-runs skip what you already have), add its name to `PER_LINK_PROFILES`
+  near the top of `dlp.py`. Otherwise it shares the global history file, which is
+  usually fine for one-off downloads.
 
 ### About the `yt-album` profile
 

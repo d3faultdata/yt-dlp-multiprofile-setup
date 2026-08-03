@@ -36,13 +36,9 @@ IS_WINDOWS = os.name == "nt"
 # own per-source download-archive file (named after the source) so re-runs skip
 # what you already have. Everything else shares one global history file.
 PER_LINK_PROFILES = {
-    "yt-playlist", "sc-playlist", "yt-album", "av-set",
+    "yt-playlist", "sc-playlist", "yt-album",
     "yt-podcasts", "yt-channel-audio", "yt-channel-video",
 }
-
-# av-set is downloaded into the current directory on purpose (ad-hoc numbered
-# sets), so it opts out of the media-root base path.
-NO_MEDIA_ROOT_PROFILES = {"av-set"}
 
 
 def fwd(p):
@@ -167,11 +163,10 @@ def main():
     config_lines = []
 
     # Master media directory. Relative -o templates in the .conf resolve under
-    # this base via --paths, so the folder tree is OS-independent. av-set opts
-    # out and downloads into the current directory instead.
+    # this base via --paths, so the folder tree is OS-independent. (A profile
+    # can still force an absolute path in its own -o, which overrides this base.)
     media_root = resolve_media_root()
-    if profile not in NO_MEDIA_ROOT_PROFILES:
-        config_lines.append(f'--paths "home:{fwd(media_root)}"')
+    config_lines.append(f'--paths "home:{fwd(media_root)}"')
 
     # ffmpeg: bundled binary's folder if present, else rely on PATH.
     ffmpeg_loc = resolve_ffmpeg_location()
