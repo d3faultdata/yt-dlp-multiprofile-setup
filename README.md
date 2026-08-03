@@ -85,9 +85,12 @@ so the folder can be copied to another machine or a backup and still work.
    - **Linux**: easiest is your package manager (`sudo apt install ffmpeg` on
      Pop!_OS/Ubuntu) - it installs `ffmpeg` and `ffprobe` on your PATH and the
      dispatcher picks them up automatically, so nothing needs to go in the repo
-     folder. For a self-contained folder instead, grab a static build from the
-     official download page (https://ffmpeg.org/download.html) and copy `ffmpeg`
-     and `ffprobe` from the archive into the repo folder.
+     folder. For a self-contained folder instead, grab a static build and copy
+     `ffmpeg` and `ffprobe` from its `bin/` folder into the repo folder. On
+     x86_64, that's `ffmpeg-master-latest-linux64-gpl.tar.xz` from
+     https://github.com/BtbN/FFmpeg-Builds/releases (use the `linuxarm64` build
+     for ARM; the official list of providers is at
+     https://ffmpeg.org/download.html).
 
 4. **Make `dlp` runnable from anywhere** (optional but convenient):
    - Windows: add the repo folder to your **User** PATH so `dlp` works in any
