@@ -99,24 +99,59 @@ All downloads go under one master directory you choose. The folder tree beneath
 it (`audio/albums`, `video/channels`, ...) is created automatically and is
 identical on every OS - only this root changes between machines.
 
-Set it once, in order of precedence:
+You set this in **one** of three ways. The dispatcher checks them in the order
+below and uses the first one it finds, so pick whichever suits you - you do not
+need more than one.
 
-1. **`dlp.local.conf`** (recommended). Copy the template and edit one line:
+1. **`dlp.local.conf` file** (recommended). A one-line file next to the scripts.
+   Copy the template:
    ```
    copy dlp.local.conf.example dlp.local.conf     :: Windows (CMD)
    cp dlp.local.conf.example dlp.local.conf       #  Linux / macOS
    ```
-   Then set the one line (forward slashes work on both OSes):
+   Then edit the one line (forward slashes work on both OSes):
    ```
    media_root = D:/data-hoarding-media             # Windows
    media_root = /home/you/data-hoarding-media      # Linux
    ```
-   This file is git-ignored, so your personal path is never committed.
+   Best choice for most people: it is git-ignored (your personal path is never
+   committed) and it travels with the folder to backups and other machines.
 
-2. **`DLP_MEDIA_ROOT`** environment variable, if you prefer not to keep a file.
+2. **`DLP_MEDIA_ROOT` environment variable.** An alternative to the file - use
+   it if you would rather not keep a config file in the folder. Set a system
+   environment variable named `DLP_MEDIA_ROOT` to your path (Windows: System
+   Properties -> Environment Variables; Linux: `export DLP_MEDIA_ROOT=...` in
+   your shell profile). It is only consulted when there is no `dlp.local.conf`.
 
-3. **A per-OS default** if neither is set (`D:/data-hoarding-media` on Windows,
-   `~/data-hoarding-media` on Linux).
+3. **Built-in default.** If you set neither of the above, downloads simply go to
+   `D:/data-hoarding-media` on Windows or `~/data-hoarding-media` on Linux. This
+   is just a fallback so the tool runs out of the box - set option 1 if you want
+   your files somewhere else.
+
+---
+
+## Verify your setup
+
+From the repo folder, list the profiles:
+
+```
+dlp list           (Windows: .\dlp.cmd list)
+```
+
+If it prints the profile names (`yt-album`, `yt-video`, ...), the dispatcher is
+installed and reading its config correctly. This step only needs Python - it
+does not touch the yt-dlp or ffmpeg binaries - so it is the quickest way to
+confirm the basics before a real download.
+
+Then try one small real download to confirm the binaries and your media path
+work end to end:
+
+```
+dlp yt-single "https://music.youtube.com/watch?v=SOME_SHORT_TRACK"
+```
+
+Check that the file landed under your `media_root` in the expected folder. If it
+did, you are set.
 
 ---
 
