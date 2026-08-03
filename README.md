@@ -95,9 +95,11 @@ so the folder can be copied to another machine or a backup and still work.
 
 ## Setting the media directory
 
-All downloads go under one master directory you choose. The folder tree beneath
-it (`audio/albums`, `video/channels`, ...) is created automatically and is
-identical on every OS - only this root changes between machines.
+All downloads go under one master directory you choose. It does **not** need to
+exist beforehand - yt-dlp creates the master directory (and the whole tree
+beneath it: `audio/albums`, `video/channels`, ...) automatically on the first
+download. The layout is identical on every OS; only this root changes between
+machines.
 
 You set this in **one** of three ways. The dispatcher checks them in the order
 below and uses the first one it finds, so pick whichever suits you - you do not
