@@ -248,7 +248,7 @@ your master media directory and are just the default layout.
 | `yt-playlist`      | General playlist -> `audio/playlists/yt-playlists/...`|
 | `yt-single`        | One track -> `audio/singles/Artist - Title.m4a`       |
 | `yt-podcasts`      | Podcast feed -> `audio/podcasts/Show/Title.m4a`       |
-| `sc-playlist`      | SoundCloud likes/playlist (reversed order)            |
+| `sc-likes`         | Your SoundCloud Likes feed -> `audio/soundcloud/likes/` (reversed order) |
 | `yt-channel-audio` | Whole channel as audio, with side-car descriptions    |
 
 **Video**
@@ -256,8 +256,6 @@ your master media directory and are just the default layout.
 | Profile            | Purpose                                               |
 |--------------------|-------------------------------------------------------|
 | `yt-video`         | Video -> `video/youTube/Channel/Date - Title.mkv`, cuts ads/self-promo, `.description` kept |
-| `yt-tv`            | TV show -> `video/tv-shows/Series/Season N/SxxExx - Title.mkv` |
-| `yt-movie`         | Movie -> `video/movies/Title/Title.mkv`               |
 | `yt-channel-video` | Whole channel as video, SponsorBlock removed, with side-car descriptions |
 
 ### Customizing profiles

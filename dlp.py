@@ -36,7 +36,7 @@ IS_WINDOWS = os.name == "nt"
 # own per-source download-archive file (named after the source) so re-runs skip
 # what you already have. Everything else shares one global history file.
 PER_LINK_PROFILES = {
-    "yt-playlist", "sc-playlist", "yt-album",
+    "yt-playlist", "sc-likes", "yt-album",
     "yt-podcasts", "yt-channel-audio", "yt-channel-video",
 }
 
